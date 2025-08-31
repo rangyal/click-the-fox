@@ -9,6 +9,6 @@ describe('App', () => {
     await userEvent.type(screen.getByRole('textbox', { name: 'Name' }), 'John');
     await userEvent.click(screen.getByRole('button', { name: 'PLAY!' }));
     await userEvent.click(screen.getByRole('button', { name: 'PLAY!' }));
-    expect(screen.getByText('Game')).toBeInTheDocument();
+    expect(screen.getByText('Initializing…')).toBeInTheDocument();
   });
 });

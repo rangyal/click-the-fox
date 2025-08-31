@@ -1,0 +1,41 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getAnimals } from '../../api/animals';
+import type { Animal } from '../../api/types';
+import { BufferedAsyncGenerator } from '../../utils/buffered-async-generator';
+
+type RandomAnimalsGenerator = ReturnType<typeof useRandomAnimalsGenerator>;
+
+const useRandomAnimalsGenerator = () => {
+  const animalsGenerator = useRef(
+    useMemo(() => new BufferedAsyncGenerator(getRandomAnimals), [])
+  );
+  const [animals, setAnimals] = useState<Animal[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
+
+  const loadAnimals = async () => {
+    setIsLoading(true);
+    setAnimals(await animalsGenerator.current.next());
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      setIsInitializing(true);
+      await animalsGenerator.current.waitForBuffer();
+      setIsInitializing(false);
+      loadAnimals();
+    };
+    init();
+  }, []);
+
+  return { animals, isInitializing, isLoading, loadAnimals };
+};
+
+const getRandomAnimals = async () => {
+  const animals = await getAnimals({ cat: 4, dog: 4, fox: 1 });
+  return animals.sort(() => Math.random() - 0.5);
+};
+
+export { useRandomAnimalsGenerator };
+export type { RandomAnimalsGenerator };

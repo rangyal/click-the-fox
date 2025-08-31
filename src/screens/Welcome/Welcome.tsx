@@ -40,7 +40,7 @@ export const Welcome = ({ onPlay }: WelcomeProps) => {
               {name}
             </Button>
           </div>
-          <Button variant="primary" onClick={handlePlay}>
+          <Button variant="primary" onClick={handlePlay} autoFocus>
             PLAY!
           </Button>
         </>
