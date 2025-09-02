@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCountdown, useTimeout } from 'usehooks-ts';
 import { AnimalPicker } from './AnimalPicker';
 import type { Animal } from '../../api/types';
-import type { RandomAnimalsGenerator } from './useRandomAnimalsGenerator';
+import type { RandomAnimalsGenerator } from '../../hooks/useRandomAnimalsGenerator';
 
 const TIME_LIMIT_IN_SECONDS = 30;
 const TIME_LIMIT_IN_MS = TIME_LIMIT_IN_SECONDS * 1000;

@@ -72,7 +72,7 @@ describe('Play', () => {
     expect(screen.getByText(/^Score: 2$/)).toBeInTheDocument();
   });
 
-  it('should decrement the score when a cat is clicked', async () => {
+  it('should decrement the score when a cat or dog is clicked', async () => {
     setup();
     clickAnimal('cat');
     expect(screen.getByText(/^Score: -1$/)).toBeInTheDocument();

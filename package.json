@@ -10,9 +10,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
+    "test": "TZ=UTC vitest",
+    "test:ui": "TZ=UTC vitest --ui",
+    "test:run": "TZ=UTC vitest run",
     "type-check": "tsc --noEmit",
     "preview": "vite preview"
   },

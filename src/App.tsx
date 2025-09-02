@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Welcome } from './screens/Welcome';
 import { Play } from './screens/Play';
-import { useRandomAnimalsGenerator } from './screens/Play/useRandomAnimalsGenerator';
+import { Scoreboard } from './screens/Scoreboard';
+import { useGameScores } from './hooks/useGameScores';
+import { useRandomAnimalsGenerator } from './hooks/useRandomAnimalsGenerator';
+import { Button } from './components/Button';
 
 type Screen = 'welcome' | 'game' | 'scoreboard';
 
 const App = () => {
   const [screen, setScreen] = useState<Screen>('welcome');
   const [name, setName] = useState('');
-  const [score, setScore] = useState(0);
+  const { scores, addScore } = useGameScores();
   const randomAnimalsGenerator = useRandomAnimalsGenerator();
 
   const handlePlay = (newName: string) => {
@@ -18,8 +21,15 @@ const App = () => {
 
   const handleEnd = (score: number) => {
     setScreen('scoreboard');
-    setScore(score);
+    addScore({ name, score, date: new Date() });
   };
+
+  const handleToWelcome = () => {
+    setName('');
+    setScreen('welcome');
+  };
+
+  const handleToGame = () => setScreen('game');
 
   return (
     <div className="min-h-screen max-h-screen p-8 flex flex-col gap-8 items-center">
@@ -37,8 +47,18 @@ const App = () => {
               onEnd={handleEnd}
             />
           ))}
-        {screen === 'scoreboard' && `${name}: ${score}`}
+        {screen === 'scoreboard' && <Scoreboard scores={scores} />}
       </div>
+      {screen === 'scoreboard' && (
+        <div className="flex gap-4">
+          <Button variant="primary" onClick={handleToWelcome}>
+            To Welcome Screen
+          </Button>
+          <Button variant="primary" onClick={handleToGame}>
+            PLAY!
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

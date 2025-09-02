@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getAnimals } from '../../api/animals';
-import type { Animal } from '../../api/types';
-import { BufferedAsyncGenerator } from '../../utils/buffered-async-generator';
+import { getAnimals } from '../api/animals';
+import type { Animal } from '../api/types';
+import { BufferedAsyncGenerator } from '../utils/buffered-async-generator';
 
 type RandomAnimalsGenerator = ReturnType<typeof useRandomAnimalsGenerator>;
 
