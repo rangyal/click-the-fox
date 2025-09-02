@@ -19,12 +19,12 @@ export const Play = ({ randomAnimalsGenerator, onEnd = () => {} }: Props) => {
   const [score, setScore] = useState(0);
   const [isEnded, setIsEnded] = useState<boolean>(false);
 
-  const handleEnd = () => {
+  const handleTimeout = () => {
     setIsEnded(true);
     onEnd(score);
   };
 
-  useTimeout(handleEnd, TIME_LIMIT_IN_MS);
+  useTimeout(handleTimeout, TIME_LIMIT_IN_MS);
 
   const handleAnimalClick = (animal: Animal) => {
     if (isEnded || randomAnimalsGenerator.isLoading) {
@@ -41,7 +41,7 @@ export const Play = ({ randomAnimalsGenerator, onEnd = () => {} }: Props) => {
     <div className="flex flex-col gap-6">
       <div className="flex justify-evenly text-3xl">
         <div>Score: {score}</div>
-        <div className="flex items-center gap-2">
+        <div>
           Time left: <CountdownSeconds countStart={TIME_LIMIT_IN_SECONDS} />
         </div>
       </div>

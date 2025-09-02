@@ -7,11 +7,11 @@ type RandomAnimalsGenerator = ReturnType<typeof useRandomAnimalsGenerator>;
 
 const useRandomAnimalsGenerator = () => {
   const animalsGenerator = useRef(
-    useMemo(() => new BufferedAsyncGenerator(getRandomAnimals), [])
+    useMemo(() => new BufferedAsyncGenerator(getRandomAnimals, 10), [])
   );
   const [animals, setAnimals] = useState<Animal[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const loadAnimals = async () => {
     setIsLoading(true);
@@ -21,7 +21,6 @@ const useRandomAnimalsGenerator = () => {
 
   useEffect(() => {
     const init = async () => {
-      setIsInitializing(true);
       await animalsGenerator.current.waitForBuffer();
       setIsInitializing(false);
       loadAnimals();
