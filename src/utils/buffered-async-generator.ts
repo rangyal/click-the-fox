@@ -23,10 +23,10 @@ class BufferedAsyncGenerator<T> {
   }
 
   public next() {
-    const [nextItem, ...rest] = this.buffer;
+    const nextItem = this.buffer.at(0) ?? this.getNewItem();
+    const rest = this.buffer.slice(1);
     this.buffer = rest;
     this.fillBuffer();
-    if (!nextItem) throw new Error('No more items');
     return nextItem;
   }
 }
