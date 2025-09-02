@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { WelcomeForm } from './Welcome.Form';
-import { Button } from '../../components/Button';
+import { Button } from '../../components';
 
 type WelcomeProps = {
   onPlay: (name: string) => void;

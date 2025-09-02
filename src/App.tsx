@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import { Welcome } from './screens/Welcome';
 import { Play } from './screens/Play';
 import { Scoreboard } from './screens/Scoreboard';
-import { useGameScores } from './hooks/useGameScores';
-import { useRandomAnimalsGenerator } from './hooks/useRandomAnimalsGenerator';
-import { Button } from './components/Button';
-
-type Screen = 'welcome' | 'game' | 'scoreboard';
+import { useAppState, useRandomAnimalsGenerator } from './hooks';
+import { Button } from './components';
 
 const App = () => {
   const { screen, scores, startGame, endGame, retryGame, resetGame } =
@@ -43,39 +39,6 @@ const App = () => {
       )}
     </div>
   );
-};
-
-const useAppState = () => {
-  const [screen, setScreen] = useState<Screen>('welcome');
-  const [name, setName] = useState('');
-  const { scores, addScore } = useGameScores();
-
-  const startGame = (newName: string) => {
-    setName(newName);
-    setScreen('game');
-  };
-
-  const endGame = (score: number) => {
-    setScreen('scoreboard');
-    addScore({ name, score, date: new Date() });
-  };
-
-  const retryGame = () => setScreen('game');
-
-  const resetGame = () => {
-    setName('');
-    setScreen('welcome');
-  };
-
-  return {
-    screen,
-    name,
-    scores,
-    startGame,
-    endGame,
-    retryGame,
-    resetGame,
-  };
 };
 
 export default App;

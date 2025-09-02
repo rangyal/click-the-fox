@@ -15,7 +15,7 @@ export const Button = ({ variant, ...props }: ButtonProps) => {
 
 const getVariantClasses = (variant: ButtonProps['variant']) => {
   const baseClasses =
-    'cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+    'cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200';
   const baseButtonClasses = `min-w-50 rounded-md px-4 py-2 ${baseClasses}`;
 
   switch (variant) {

@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Button } from '../../components/Button';
+import { Button } from '../../components';
 
 type WelcomeFormProps = {
   defaultName?: string;
