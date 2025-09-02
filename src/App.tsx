@@ -1,6 +1,7 @@
 import { Welcome } from './screens/Welcome';
 import { Play } from './screens/Play';
 import { Scoreboard } from './screens/Scoreboard';
+import { ErrorScreen } from './screens/ErrorScreen';
 import { useAppState, useRandomAnimalsGenerator } from './hooks';
 import { Button } from './components';
 
@@ -8,6 +9,8 @@ const App = () => {
   const { screen, scores, startGame, endGame, retryGame, resetGame } =
     useAppState();
   const randomAnimalsGenerator = useRandomAnimalsGenerator();
+
+  if (randomAnimalsGenerator.error) return <ErrorScreen />;
 
   return (
     <div className="min-h-screen max-h-screen p-8 flex flex-col gap-8 items-center">

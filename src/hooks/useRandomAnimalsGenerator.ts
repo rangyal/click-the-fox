@@ -10,25 +10,35 @@ const useRandomAnimalsGenerator = () => {
     useMemo(() => new BufferedAsyncGenerator(getRandomAnimals, 10), [])
   );
   const [animals, setAnimals] = useState<Animal[] | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
 
   const loadAnimals = async () => {
     setIsLoading(true);
-    setAnimals(await animalsGenerator.current.next());
+    setError(null);
+    try {
+      setAnimals(await animalsGenerator.current.next());
+    } catch (error) {
+      setError(error as Error);
+    }
     setIsLoading(false);
   };
 
   useEffect(() => {
     const init = async () => {
-      await animalsGenerator.current.waitForBuffer();
+      try {
+        await animalsGenerator.current.waitForBuffer();
+        loadAnimals();
+      } catch (error) {
+        setError(error as Error);
+      }
       setIsInitializing(false);
-      loadAnimals();
     };
     init();
   }, []);
 
-  return { animals, isInitializing, isLoading, loadAnimals };
+  return { animals, isInitializing, isLoading, loadAnimals, error };
 };
 
 const getRandomAnimals = async () => {
