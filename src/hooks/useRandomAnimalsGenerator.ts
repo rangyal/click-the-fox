@@ -1,45 +1,35 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getAnimals } from '../api/animals';
 import type { Animal } from '../api/types';
 import { BufferedAsyncGenerator } from '../utils/buffered-async-generator';
+import { useOnce } from './useOnce';
 
 type RandomAnimalsGenerator = ReturnType<typeof useRandomAnimalsGenerator>;
 
 const useRandomAnimalsGenerator = () => {
-  const animalsGeneratorRef = useRef<BufferedAsyncGenerator<Animal[]> | null>(
-    null
+  const animalsGenerator = useOnce(
+    () => new BufferedAsyncGenerator(getRandomAnimals, 10)
   );
-  if (!animalsGeneratorRef.current)
-    animalsGeneratorRef.current = new BufferedAsyncGenerator(
-      getRandomAnimals,
-      10
-    );
   const [animals, setAnimals] = useState<Animal[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
 
-  const getAnimalsGenerator = () => {
-    if (!animalsGeneratorRef.current)
-      throw new Error('Animals generator not initialized');
-    return animalsGeneratorRef.current;
-  };
-
-  const loadAnimals = async () => {
+  const loadAnimals = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      setAnimals(await getAnimalsGenerator().next());
+      setAnimals(await animalsGenerator.next());
     } catch (error) {
       setError(error as Error);
     }
     setIsLoading(false);
-  };
+  }, [animalsGenerator]);
 
   useEffect(() => {
     const init = async () => {
       try {
-        await getAnimalsGenerator().waitForBuffer();
+        await animalsGenerator.waitForBuffer();
         loadAnimals();
       } catch (error) {
         setError(error as Error);
@@ -47,7 +37,7 @@ const useRandomAnimalsGenerator = () => {
       setIsInitializing(false);
     };
     init();
-  }, []);
+  }, [animalsGenerator, loadAnimals]);
 
   return { animals, isInitializing, isLoading, loadAnimals, error };
 };
