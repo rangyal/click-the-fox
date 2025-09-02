@@ -6,26 +6,26 @@ class BufferedAsyncGenerator<T> {
   constructor(getNewItem: () => Promise<T>, bufferSize: number = 10) {
     this.bufferSize = bufferSize;
     this.getNewItem = getNewItem;
-    this.initializeBuffer();
+    this.fillBuffer();
   }
 
-  private addNewItemToBuffer() {
-    this.buffer.push(this.getNewItem());
+  private fillBuffer() {
+    if (this.buffer.length >= this.bufferSize) return;
+    const newItems = Array.from(
+      { length: this.bufferSize - this.buffer.length },
+      this.getNewItem
+    );
+    this.buffer = [...this.buffer, ...newItems];
   }
 
-  private async initializeBuffer() {
-    for (let i = 0; i < this.bufferSize; i++) {
-      this.addNewItemToBuffer();
-    }
-  }
-
-  public async waitForBuffer() {
-    await Promise.all(this.buffer);
+  public waitForBuffer() {
+    return Promise.all(this.buffer).then(() => {});
   }
 
   public next() {
-    this.addNewItemToBuffer();
-    const nextItem = this.buffer.shift();
+    const [nextItem, ...rest] = this.buffer;
+    this.buffer = rest;
+    this.fillBuffer();
     if (!nextItem) throw new Error('No more items');
     return nextItem;
   }
